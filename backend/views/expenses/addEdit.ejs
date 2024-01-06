@@ -19,55 +19,43 @@
 
     <div class="mb-3">
       <label for="productName" class="form-label">Product Name</label>
-      <input
-        type="text"
-        class="form-control"
-        name="productName"
-        value="<%=data?data.productName:''%>"
-      />
+      <input type="text" class="form-control" name="productName" value="<%=data?data?.productName:''%>" />
     </div>
 
     <div class="mb-3">
       <label for="productPrice" class="form-label">Product Price</label>
-      <input
-        type="number"
-        class="form-control"
-        name="productPrice"
-        value="<%=data?data.productPrice:''%>"
-      />
+      <input type="number" class="form-control" name="productPrice" value="<%=data?data?.productPrice:''%>" />
     </div>
 
     <div class="mb-3">
       <label for="productQuantity" class="form-label">Product Quantity</label>
-      <input
-        type="text"
-        class="form-control"
-        name="productQuantity"
-        value="<%=data?data.productQuantity:''%>"
-      />
+      <input type="text" class="form-control" name="productQuantity" value="<%=data?data?.productQuantity:''%>" />
     </div>
 
     <div class="mb-3">
       <label for="image" class="form-label">Product Image</label>
-      <input
-        type="file"
-        class="form-control"
-        name="image"
-        id="image"
-        accept="image/png, image/jpg, image/jpeg"
-      />
-      <img
-        id="image-preview"
-        src="<%=data?.image?data?.image:''%>"
-        alt="Image"
-        width="90"
-      />
+      <input type="file" class="form-control" name="image" id="image" accept="image/png, image/jpg, image/jpeg" />
+      <img id="image-preview" src="<%=data?.image?data?.image:''%>" alt="Image" width="90" />
       <input type="hidden" name="old_image" value="<%=data?data?.image:''%>" />
     </div>
 
     <div class="mb-3">
       <label for="member" class="form-label">Created/Upadted By</label>
-      <input type="text" class="form-control" name="member" />
+      <select class="form-select" aria-label="Default select example" name="member">
+        <option selected>Open this select menu</option>
+        <% if (data?.expense.member) { %>
+           <% console.log("memberEJS",data?.expense?.member.toString()) %>
+           <% data?.member.forEach((item)=>{ %>
+              <% console.log("itemEJS",item?._id.toString()) %>
+             <option value="<%=item?._id%>" <% item?._id == data?.expense?.member.toString() ? 'selected' : '' %>><%=item?.name%></option>
+           <% }) %>
+        <% }else{ %>
+            <% data?.member.forEach((item)=>{ %>
+            <option value="<%=item?._id%>"><%=item?.name%></option>
+            <% }) %>
+        <% } %>
+
+      </select>
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
@@ -75,15 +63,15 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function() {
     var imageInput = document.getElementById("image");
     var imagePreview = document.getElementById("image-preview");
 
-    imageInput.addEventListener("change", function () {
+    imageInput.addEventListener("change", function() {
       var file = imageInput.files[0];
       if (file) {
         var reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = function(e) {
           imagePreview.src = e.target.result;
         };
         reader.readAsDataURL(file);

@@ -4,6 +4,7 @@ const ejs = require("ejs");
 const morgan = require("morgan");
 const conn = require("./db/db");
 const { expenseRouter, expenseApiRouter } = require("./routes/Expense");
+const { memberAdminRouter, memberAPIRouter } = require("./routes/Member");
 const app = express();
 /*
  * DB Connection
@@ -20,9 +21,11 @@ app.set("view engine", "ejs");
 
 //! Admin Routes
 app.use("/admin/expense", expenseRouter);
+app.use("/admin/member", memberAdminRouter);
 
 //! API Routes
 app.use("/api/expense", expenseApiRouter);
+app.use("/api/member", memberAPIRouter);
 
 //! Index Route
 app.get("/", (req, res) => {

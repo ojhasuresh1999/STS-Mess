@@ -3,7 +3,7 @@ const {
   expenseList,
   createExpense,
   expenseAPIList,
-  viewAddEditPage,
+  viewAddPage,
   viewEditPage,
   deleteExpense,
 } = require("../controllers/expense");
@@ -15,7 +15,7 @@ const expenseApiRouter = express.Router();
  */
 expenseRouter
   .get("/", expenseList)
-  .get("/addEdit", viewAddEditPage)
+  .get("/addPage", viewAddPage)
   .post("/add", createExpense)
   .get("/edit/:id", viewEditPage)
   .delete("/delete/:id", deleteExpense);

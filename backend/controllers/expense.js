@@ -1,16 +1,21 @@
 const Expense = require("../models/Expense");
+const Member = require("../models/Members");
 
 /*
  * For Admin Panel
  */
 const expenseList = async (req, res) => {
-  const allExpense = await Expense.find().sort({ createdAt: -1 });
-  // res.status(200).send(allExpense);
+  const allExpense = await Expense.find()
+    .populate({ path: "member", select: "name" })
+    .sort({ createdAt: -1 });
   res.render("expenses/list", { result: allExpense });
 };
 
-const viewAddEditPage = async (req, res) => {
-  res.render("expenses/addEdit");
+const viewAddPage = async (req, res) => {
+  const member = await Member.find();
+  const expense = [];
+  const data = { member: member, expense: expense };
+  res.render("expenses/addEdit", { data: data });
 };
 
 const createExpense = async (req, res) => {
@@ -24,6 +29,7 @@ const createExpense = async (req, res) => {
       expense.productPrice = productPrice;
       expense.productQuantity = productQuantity;
       expense.image = image;
+      expense.member = member;
       await expense.save();
       res.redirect("/admin/expense");
     } else {
@@ -32,7 +38,7 @@ const createExpense = async (req, res) => {
         productPrice,
         productQuantity,
         image,
-        // member,
+        member,
       });
       await newExpense.save();
       // res.status(201).send(newExpense);
@@ -47,15 +53,17 @@ const createExpense = async (req, res) => {
 const viewEditPage = async (req, res) => {
   const { id } = req.params;
   const expense = await Expense.findById(id);
-  console.log("expense=============>", expense);
-  res.render("expenses/addEdit", { data: expense });
+  const member = await Member.find();
+  const data = { expense, member };
+  // console.log("data=============>", data);
+  res.render("expenses/addEdit", { data: data });
 };
 
 const deleteExpense = async (req, res) => {
   const { id } = req.params;
   try {
     const delete1 = await Expense.findByIdAndDelete(id);
-    console.log("delete=============>", delete1);
+    // console.log("delete=============>", delete1);
     res.redirect("/admin/expense");
   } catch (error) {
     console.log(error);
@@ -66,7 +74,9 @@ const deleteExpense = async (req, res) => {
  * For API
  */
 const expenseAPIList = async (req, res) => {
-  const allExpense = await Expense.find().sort({ createdAt: -1 });
+  const allExpense = await Expense.find()
+    .populate({ path: "member", select: "image" })
+    .sort({ createdAt: -1 });
   res.status(200).send(allExpense);
 };
 
@@ -74,7 +84,7 @@ module.exports = {
   expenseList,
   createExpense,
   expenseAPIList,
-  viewAddEditPage,
+  viewAddPage,
   viewEditPage,
   deleteExpense,
 };

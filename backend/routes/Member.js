@@ -1,16 +1,29 @@
 const express = require("express");
-const Member = require("../models/Member");
+const {
+  getAllMembers,
+  createMember,
+  viewAddPage,
+  viewEditPage,
+  deleteMember,
+  allMembers,
+} = require("../controllers/member");
 
-const memberRouter = express.Router();
+const memberAdminRouter = express.Router();
+const memberAPIRouter = express.Router();
 
 /*
  * Routes for Admin Panel
  */
-memberRouter.get("/list", async (req, res) => {
-  try {
-    const members = await Member.find();
-    res.json(members);
-  } catch (error) {
-    res.json({ message: error });
-  }
-});
+memberAdminRouter
+  .get("/", getAllMembers)
+  .get("/addPage", viewAddPage)
+  .post("/add", createMember)
+  .get("/edit/:id", viewEditPage)
+  .delete("/delete/:id", deleteMember);
+
+/*
+ * Routes for API
+ */
+memberAPIRouter.get("/", allMembers);
+
+module.exports = { memberAdminRouter, memberAPIRouter };

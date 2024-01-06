@@ -49,12 +49,11 @@ const RecipeReviewCard = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Token ${localStorage.getItem("token")}`,
       },
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
+        console.log("data========>", data);
         setData(data);
       });
   }, []);
@@ -74,6 +73,7 @@ const RecipeReviewCard = () => {
         }}
       >
         {data.map((item, index) => {
+          // console.log("member=====>", item.member.image);
           const quantityMatch = item.productQuantity.match(/\d+/);
           const quantity = quantityMatch ? parseInt(quantityMatch[0], 10) : 1;
           const unitPrice = calculateUnitPrice(
@@ -83,7 +83,7 @@ const RecipeReviewCard = () => {
           return (
             <HoverableCard sx={{ maxWidth: 345, margin: "16px" }}>
               <CardHeader
-                avatar={<Avatar src={girlImage} />}
+                avatar={<Avatar src={item.member.image} />}
                 title={item.productName}
                 subheader={formattedDate(new Date(item.createdAt))}
               />
